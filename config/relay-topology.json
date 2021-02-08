@@ -1,8 +1,8 @@
 {
   "Producers": [
     {
-      "addr": "10.4.118.114",
-      "port": 6000,
+      "addr": "core.prod.tokentynamics",
+      "port": 3001,
       "valency": 1
     },
     {
