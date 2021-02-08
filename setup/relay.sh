@@ -8,14 +8,24 @@ docker pull quay.io/tokendynamics/docker-cardano-node
 
 # Download configs
 docker run --rm \
-  -v "/opt/instances:/opt/instances" \
+  -v "/opt/instance:/opt/instance" \
   -i amazon/aws-cli \
   s3 sync \
   ${config_path}/ \
-  /opt/instances/
+  /opt/instance/
+
+NODE_CONFIG=mainnet
 
 # Run the node
-docker run -d \
-  -v "/opt/instances:/opt/instances" \
-  -i quay.io/tokendynamics/docker-cardano-node \
-  cardano-node version
+sudo docker run -ti \
+  -v "/opt/instance:/opt/instance" \
+  -e CARDANO_NODE_SOCKET_PATH="/opt/instance/db/socket" \
+  -p 0.0.0.0:3001:3001 \
+  -i inputoutput/cardano-node \
+  run \
+  --topology "/opt/instance/config/relay-topology.json" \
+  --database-path /opt/instance/db \
+  --socket-path /opt/instance/db/socket \
+  --host-addr 0.0.0.0 \
+  --port 3001 \
+  --config "/opt/instance/config/mainnet-config.json"
