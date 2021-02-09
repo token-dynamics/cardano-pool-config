@@ -11,3 +11,9 @@ export slotNo=$(sudo docker run \
   inputoutput/cardano-node \
   query tip --mainnet | jq -r '.slotNo')
 echo "slotNo: ${slotNo}"
+
+kesPeriod=$((${slotNo} / ${slotsPerKESPeriod}))
+echo "kesPeriod: ${kesPeriod}"
+
+startKesPeriod=${kesPeriod}
+echo "startKesPeriod: ${startKesPeriod}"
