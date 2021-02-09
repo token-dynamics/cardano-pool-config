@@ -85,5 +85,12 @@
       "scName": "stdout",
       "scRotation": null
     }
-  ]
+  ],
+  "traceForwardTo": {
+    "tag": "RemoteSocket",
+    "contents": [
+      "0.0.0.0",
+      "4000"
+    ]
+  }
 }
