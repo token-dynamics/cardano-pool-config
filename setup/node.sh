@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-apt-get install -y docker.io
-apt-get install -y awscli
+sudo apt-get install -y docker.io
+sudo apt-get install -y awscli
 
-docker pull amazon/aws-cli
-docker pull quay.io/tokendynamics/docker-cardano-node
+sudo docker pull amazon/aws-cli
+sudo docker pull quay.io/tokendynamics/docker-cardano-node
 
 # Download configs
-docker run --rm \
+sudo docker run --rm \
   -v "/opt/instance:/opt/instance" \
   -i amazon/aws-cli \
   s3 sync \
