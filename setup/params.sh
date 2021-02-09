@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-slotsPerKESPeriod=$(cat /opt/instance/config/mainnet-shelley-genesis.json | jq -r '.slotsPerKESPeriod')
+export slotsPerKESPeriod=$(cat /opt/instance/config/mainnet-shelley-genesis.json | jq -r '.slotsPerKESPeriod')
 echo "slotsPerKESPeriod: ${slotsPerKESPeriod}"
 
-slotNo=$(sudo docker run -ti --entrypoint /bin/cardano-cli inputoutput/cardano-node query tip --mainnet | jq -r '.slotNo')
+export slotNo=$(sudo docker run \
+  -e CARDANO_NODE_SOCKET_PATH=/data/instance/db/socket \
+  -v /data/instance/db/socket:/data/instance/db/socket \
+  -ti \
+  --entrypoint /bin/cardano-cli \
+  inputoutput/cardano-node \
+  query tip --mainnet | jq -r '.slotNo')
 echo "slotNo: ${slotNo}"
