@@ -23,7 +23,7 @@ NODE_CONFIG=mainnet
 log "Starting relay server"
 
 # Run the node
-sudo docker run -ti \
+sudo docker run -d \
   -v "/opt/instance:/opt/instance" \
   -e CARDANO_NODE_SOCKET_PATH="/opt/instance/db/socket" \
   -p 0.0.0.0:3001:3001 \
