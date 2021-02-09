@@ -4,6 +4,9 @@ log() {
   echo "relay.sh: $@"
 }
 
+grep 'source /opt/instance/env/core.sh' /home/ubuntu/.bashrc ||
+  echo "source /opt/instance/env/core.sh" >> /home/ubuntu/.bashrc
+
 sudo apt-get install -y docker.io
 sudo apt-get install -y awscli
 
