@@ -9,6 +9,7 @@ grep 'source /opt/instance/env/relay.sh' /home/ubuntu/.bashrc ||
 
 sudo apt-get install -y docker.io
 sudo apt-get install -y awscli
+sudo apt-get install -y jq
 
 sudo docker pull amazon/aws-cli
 sudo docker pull quay.io/tokendynamics/docker-cardano-node
