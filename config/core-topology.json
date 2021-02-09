@@ -1,7 +1,7 @@
 {
   "Producers": [
     {
-      "addr": "relay.prod.tokentynamics",
+      "addr": "relay.prod.tokendynamics",
       "port": 3001,
       "valency": 1
     }

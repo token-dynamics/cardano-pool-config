@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+log() {
+  echo "relay.sh: $@"
+}
+
 sudo apt-get install -y docker.io
 sudo apt-get install -y awscli
 
@@ -16,6 +20,8 @@ sudo docker run --rm \
 
 NODE_CONFIG=mainnet
 
+log "Starting relay server"
+
 # Run the node
 sudo docker run -ti \
   -v "/opt/instance:/opt/instance" \
@@ -29,3 +35,5 @@ sudo docker run -ti \
   --host-addr 0.0.0.0 \
   --port 3001 \
   --config "/opt/instance/config/mainnet-config.json"
+
+log "Done."

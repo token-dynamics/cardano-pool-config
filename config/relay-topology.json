@@ -1,7 +1,7 @@
 {
   "Producers": [
     {
-      "addr": "core.prod.tokentynamics",
+      "addr": "core.prod.tokendynamics",
       "port": 3001,
       "valency": 1
     },
