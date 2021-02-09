@@ -23,7 +23,7 @@ sudo docker run -ti --rm \
 
 NODE_CONFIG=mainnet
 
-mkdir -p /opt/instance/db
+mkdir -p /data/instance/db
 
 log "Starting relay server"
 
@@ -35,8 +35,8 @@ sudo docker run -d \
   -i inputoutput/cardano-node \
   run \
   --topology "/opt/instance/config/relay-topology.json" \
-  --database-path /opt/instance/db \
-  --socket-path /opt/instance/db/socket \
+  --database-path /data/instance/db \
+  --socket-path /data/instance/db/socket \
   --host-addr 0.0.0.0 \
   --port 3001 \
   --config "/opt/instance/config/mainnet-config.json"
