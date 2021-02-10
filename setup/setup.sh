@@ -39,7 +39,7 @@ cp -r $config_dir /opt/cardano-node/
 cat <<EOF > /opt/cardano-node/cardano-node.env
 CONFIG="/opt/cardano-node/config/mainnet-config.json"
 TOPOLOGY="/opt/cardano-node/config/$NODE_TYPE-topology.json"
-DBPATH="/data/cardano-node/db"
+DBPATH="/data/instance/db"
 SOCKETPATH="/opt/cardano-node/socket"
 HOSTADDR="0.0.0.0"
 PORT="3001"
