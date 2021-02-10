@@ -10,7 +10,7 @@ case "$NODE_TYPE" in
   "relay") ;;
   "core") ;;
   *)
-    echo "invalid node type ($NODE_TYPE), 'relay' or 'core' are not supported."
+    echo "invalid node type ($NODE_TYPE), only 'relay' or 'core' are supported."
     exit 1 ;;
 esac
 
