@@ -8,4 +8,4 @@ cd $git_root
 
 git pull
 
-./setup.sh
+sh $setup_dir/setup.sh

@@ -53,7 +53,7 @@ PORT="3001"
 EOF
 
 if [ $NODE_TYPE == "core" ]; then
-cat <<EOF > /opt/cardano-node/cardano-node.env
+cat <<EOF >> /opt/cardano-node/cardano-node.env
 KES=/opt/cardano-node/keys/kes.skey
 VRF=/opt/cardano-node/keys/vrf.skey
 CERT=/opt/cardano-node/keys/node.cert
