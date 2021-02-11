@@ -18,6 +18,10 @@ log() {
   echo "$NODE_TYPE: $@"
 }
 
+log "Install more packages"
+sudo apt-get update
+sudo apt-get install jq
+
 log "Setup scripts are in: $setup_dir"
 log "Config templates are in: $config_dir"
 
