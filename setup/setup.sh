@@ -39,21 +39,29 @@ NODE_CONFIG=mainnet
 mkdir -p /data/cardano-node/db
 
 cp -r $config_dir /opt/cardano-node/
+cp $setup_dir/run-node.sh /opt/cardano-node/
 
 cat <<EOF > /opt/cardano-node/cardano-node.env
+NODE_TYPE=$NODE_TYPE
+
 CONFIG="/opt/cardano-node/config/mainnet-config.json"
 TOPOLOGY="/opt/cardano-node/config/$NODE_TYPE-topology.json"
 DBPATH="/data/instance/db"
 SOCKETPATH="/opt/cardano-node/socket"
 HOSTADDR="0.0.0.0"
 PORT="3001"
+EOF
+
+if [ $NODE_TYPE == "core" ]; then
+cat <<EOF > /opt/cardano-node/cardano-node.env
 KES=/opt/cardano-node/keys/kes.skey
 VRF=/opt/cardano-node/keys/vrf.skey
 CERT=/opt/cardano-node/keys/node.cert
 EOF
+done
 
 log "Configuring systemd"
-sudo cp $setup_dir/cardano-$NODE_TYPE.service /etc/systemd/system/cardano-node.service
+sudo cp $setup_dir/cardano-node.service /etc/systemd/system/cardano-node.service
 sudo chmod 644 /etc/systemd/system/cardano-node.service
 sudo systemctl daemon-reload
 
