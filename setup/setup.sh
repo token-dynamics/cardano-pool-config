@@ -58,7 +58,7 @@ KES=/opt/cardano-node/keys/kes.skey
 VRF=/opt/cardano-node/keys/vrf.skey
 CERT=/opt/cardano-node/keys/node.cert
 EOF
-done
+fi
 
 log "Configuring systemd"
 sudo cp $setup_dir/cardano-node.service /etc/systemd/system/cardano-node.service
