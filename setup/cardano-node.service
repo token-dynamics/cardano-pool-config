@@ -6,16 +6,7 @@ After = network-online.target
 [Service]
 Type = simple
 EnvironmentFile = /opt/cardano-node/cardano-node.env
-ExecStart = /usr/local/bin/cardano-node run \
-              --config $CONFIG \
-              --topology $TOPOLOGY \
-              --database-path $DBPATH \
-              --socket-path $SOCKETPATH \
-              --host-addr $HOSTADDR \
-              --port $PORT \
-              --shelley-kes-key $KES \
-              --shelley-vrf-key $VRF \
-              --shelley-operational-certificate $CERT
+ExecStart = /opt/cardano-node/run-node.sh
 StandardOutput = journal
 StandardError = journal
 SyslogIdentifier = cardano-node
