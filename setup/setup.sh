@@ -75,6 +75,9 @@ crontab_file="$(mktemp)"
 cat > "$crontab_fragment_file" << EOF
 22 * * * * /opt/cardano-node/src/scripts/update-relay-topology.sh
 EOF
-crontab -l | cat - "$crontab_fragment_file" > "$crontab_file" && crontab "$crontab_file"
+crontab -l \
+  | grep -v /opt/cardano-node/src/scripts/update-relay-topology.sh \
+  | cat - "$crontab_fragment_file" \
+  > "$crontab_file" && crontab "$crontab_file"
 
 log "Done."
