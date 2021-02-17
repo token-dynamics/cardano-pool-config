@@ -2,8 +2,9 @@
 # shellcheck disable=SC2086,SC2034
  
 USERNAME=$(whoami)
-CNODE_PORT=6000 # must match your relay node port as set in the startup command
-CNODE_HOSTNAME="CHANGE ME"  # optional. must resolve to the IP you are requesting from
+NODE_CONFIG=mainnet
+CNODE_PORT=3001
+CNODE_HOSTNAME="relay.ace.tokendynamics.net"  # optional. must resolve to the IP you are requesting from
 CNODE_BIN="/usr/local/bin"
 CNODE_HOME="/opt/cardano-node"
 CNODE_LOG_DIR="/opt/cardano-node/logs"
