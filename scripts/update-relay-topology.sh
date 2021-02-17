@@ -8,11 +8,11 @@ CNODE_HOSTNAME="relay.ace.tokendynamics.net"  # optional. must resolve to the IP
 CNODE_BIN="/usr/local/bin"
 CNODE_HOME="/opt/cardano-node"
 CNODE_LOG_DIR="/opt/cardano-node/logs"
-GENESIS_JSON="/opt/cardano-node/${NODE_CONFIG}-shelley-genesis.json"
+GENESIS_JSON="/opt/cardano-node/config/${NODE_CONFIG}-shelley-genesis.json"
 NETWORKID=$(jq -r .networkId $GENESIS_JSON)
 CNODE_VALENCY=1   # optional for multi-IP hostnames
 NWMAGIC=$(jq -r .networkMagic < $GENESIS_JSON)
-[[ "${NETWORKID}" = "mainnet" ]] && HASH_IDENTIFIER="--mainnet" || HASH_IDENTIFIER="--testnet-magic ${NWMAGIC}"
+[[ "${NETWORKID}" = "Mainnet" ]] && HASH_IDENTIFIER="--mainnet" || HASH_IDENTIFIER="--testnet-magic ${NWMAGIC}"
 [[ "${NWMAGIC}" = "764824073" ]] && NETWORK_IDENTIFIER="--mainnet" || NETWORK_IDENTIFIER="--testnet-magic ${NWMAGIC}"
 
 export PATH="${CNODE_BIN}:${PATH}"
