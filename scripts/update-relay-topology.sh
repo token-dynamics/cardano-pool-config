@@ -12,7 +12,7 @@ GENESIS_JSON="/opt/cardano-node/${NODE_CONFIG}-shelley-genesis.json"
 NETWORKID=$(jq -r .networkId $GENESIS_JSON)
 CNODE_VALENCY=1   # optional for multi-IP hostnames
 NWMAGIC=$(jq -r .networkMagic < $GENESIS_JSON)
-[[ "${NETWORKID}" = "Mainnet" ]] && HASH_IDENTIFIER="--mainnet" || HASH_IDENTIFIER="--testnet-magic ${NWMAGIC}"
+[[ "${NETWORKID}" = "mainnet" ]] && HASH_IDENTIFIER="--mainnet" || HASH_IDENTIFIER="--testnet-magic ${NWMAGIC}"
 [[ "${NWMAGIC}" = "764824073" ]] && NETWORK_IDENTIFIER="--mainnet" || NETWORK_IDENTIFIER="--testnet-magic ${NWMAGIC}"
 
 export PATH="${CNODE_BIN}:${PATH}"
