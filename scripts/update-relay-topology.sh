@@ -16,7 +16,7 @@ NWMAGIC=$(jq -r .networkMagic < $GENESIS_JSON)
 [[ "${NWMAGIC}" = "764824073" ]] && NETWORK_IDENTIFIER="--mainnet" || NETWORK_IDENTIFIER="--testnet-magic ${NWMAGIC}"
 
 export PATH="${CNODE_BIN}:${PATH}"
-export CARDANO_NODE_SOCKET_PATH="/data/instance/db/socket"
+export CARDANO_NODE_SOCKET_PATH="/opt/cardano-node/socket"
 
 blockNo=$(/usr/local/bin/cardano-cli query tip ${NETWORK_IDENTIFIER} | jq -r .blockNo )
  
