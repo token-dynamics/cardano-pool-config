@@ -20,7 +20,7 @@ log() {
 
 log "Install more packages"
 sudo apt-get update
-sudo apt-get -y install jq
+sudo apt-get -y install jq cron
 
 log "Setup scripts are in: $setup_dir"
 log "Config templates are in: $config_dir"
@@ -68,5 +68,13 @@ sudo systemctl daemon-reload
 log "Starting relay server"
 sudo systemctl enable cardano-node
 sudo systemctl reload-or-restart cardano-node
+
+log "Setup relay update"
+crontab_fragment_file="$(mktemp)"
+crontab_file="$(mktemp)"
+cat > "$crontab_fragment_file" << EOF
+22 * * * * /opt/cardano-node/src/scripts/update-relay-topology.sh
+EOF
+crontab -l | cat - "$crontab_fragment_file" > "$crontab_file" && crontab "$crontab_file"
 
 log "Done."
