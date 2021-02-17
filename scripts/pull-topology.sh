@@ -10,7 +10,7 @@ cat > "/opt/cardano-node/config/core-topology.json" <<EOF
 {
   "Producers": [
     {
-      "addr": "relay.${WORKSPACE}.tokendynamics",
+      "addr": "relay.${WORKSPACE}.tokendynamics.net",
       "port": 3001,
       "valency": 1
     }
