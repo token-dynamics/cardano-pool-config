@@ -41,6 +41,8 @@ mkdir -p /data/cardano-node/db
 cp -r $config_dir /opt/cardano-node/
 cp $setup_dir/run-node.sh /opt/cardano-node/
 
+/opt/cardano-node/src/scripts/pull-topology.sh
+
 cat <<EOF > /opt/cardano-node/cardano-node.env
 NODE_TYPE=$NODE_TYPE
 
