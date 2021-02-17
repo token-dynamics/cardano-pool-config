@@ -23,11 +23,7 @@ blockNo=$(/usr/local/bin/cardano-cli query tip ${NETWORK_IDENTIFIER} | jq -r .bl
 # Note:
 # if you run your node in IPv4/IPv6 dual stack network configuration and want announced the
 # IPv4 address only please add the -4 parameter to the curl command below  (curl -4 -s ...)
-if [ "${CNODE_HOSTNAME}" != "CHANGE ME" ]; then
-  T_HOSTNAME="&hostname=${CNODE_HOSTNAME}"
-else
-  T_HOSTNAME=''
-fi
+T_HOSTNAME="&hostname=${CNODE_HOSTNAME}"
 
 if [ ! -d /opt/cardano-node/logs ]; then
   mkdir -p /opt/cardano-node/logs;
