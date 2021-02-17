@@ -34,4 +34,3 @@ if [ ! -d /opt/cardano-node/logs ]; then
 fi
  
 curl -s "https://api.clio.one/htopology/v1/?port=${CNODE_PORT}&blockNo=${blockNo}&valency=${CNODE_VALENCY}&magic=${NWMAGIC}${T_HOSTNAME}" | tee -a /opt/cardano-node/logs/topologyUpdater_lastresult.json
-EOF
