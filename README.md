@@ -1,4 +1,4 @@
-# cardano-stakepool-config
+# cardano-pool-config
 Config for cardano stake pool
 
 ## Viewing and filter logs
