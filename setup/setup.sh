@@ -27,6 +27,12 @@ curl -sL https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/ama
 sudo dpkg -i -E /tmp/amazon-cloudwatch-agent.deb
 rm /tmp/amazon-cloudwatch-agent.deb
 
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -c file:/opt/cardano-node/src/config/cloudwatch-agent-config.json \
+  -s
+
 log "Setup scripts are in: $setup_dir"
 log "Config templates are in: $config_dir"
 
