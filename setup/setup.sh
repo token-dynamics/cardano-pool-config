@@ -22,6 +22,11 @@ log "Install more packages"
 sudo apt-get update
 sudo apt-get -y install jq cron
 
+log "Install cloudwatch agent"
+curl -sL https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb -o /tmp/amazon-cloudwatch-agent.deb
+sudo dpkg -i -E /tmp/amazon-cloudwatch-agent.deb
+rm /tmp/amazon-cloudwatch-agent.deb
+
 log "Setup scripts are in: $setup_dir"
 log "Config templates are in: $config_dir"
 
