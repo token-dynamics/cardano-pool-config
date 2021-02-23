@@ -84,7 +84,7 @@ sudo systemctl daemon-reload
 
 log "Starting relay server"
 sudo systemctl enable cardano-node send-cloudwatch.timer
-sudo systemctl reload-or-restart cardano-node
+sudo systemctl reload-or-restart cardano-node send-cloudwatch.timer
 
 log "Setup relay update"
 crontab_fragment_file="$(mktemp)"
