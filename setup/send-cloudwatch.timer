@@ -1,0 +1,11 @@
+[Unit]
+Description = Send node stats to AWS CloudWatch every 5 minutes
+Requires=send-cloudwatch.service
+
+[Timer]
+Unit=send-cloudwatch.service
+OnUnitInactiveSec=5m
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

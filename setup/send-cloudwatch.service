@@ -1,0 +1,11 @@
+[Unit]
+Description = Sends Cardano Node stats to AWS CloudWatch periodically
+Wants = send-cloudwatch.timer
+
+[Service]
+EnvironmentFile = /opt/cardano-node/cardano-node.env
+ExecStart = /opt/cardano-node/send-cloudwatch.sh
+WorkingDirectory = /opt/cardano-node
+
+[Install]
+WantedBy=multi-user.target

@@ -5,6 +5,7 @@ source /opt/cardano-node/machine.env
 setup_dir="$(dirname $(readlink -f $0))"
 env_dir="$(readlink -f $setup_dir/../env)"
 config_dir="$(readlink -f $setup_dir/../config)"
+scripts_dir="$(readlink -f $setup_dir/../scripts)"
 
 case "$NODE_TYPE" in
   "relay") ;;
@@ -45,11 +46,13 @@ mkdir -p /data/cardano-node/db
 
 cp -r $config_dir /opt/cardano-node/
 cp $setup_dir/run-node.sh /opt/cardano-node/
+cp $scripts_dir/send-cloudwatch.sh /opt/cardano-node/
 
 /opt/cardano-node/src/scripts/pull-topology.sh
 
 cat <<EOF > /opt/cardano-node/cardano-node.env
 NODE_TYPE=$NODE_TYPE
+POOL_NAME=$WORKSPACE
 
 CONFIG="/opt/cardano-node/config/mainnet-config.json"
 TOPOLOGY="/opt/cardano-node/config/$NODE_TYPE-topology.json"
@@ -70,10 +73,17 @@ fi
 log "Configuring systemd"
 sudo cp $setup_dir/cardano-node.service /etc/systemd/system/cardano-node.service
 sudo chmod 644 /etc/systemd/system/cardano-node.service
+
+sudo cp $setup_dir/send-cloudwatch.service /etc/systemd/system/send-cloudwatch.service
+sudo chmod 644 /etc/systemd/system/send-cloudwatch.service
+
+sudo cp $setup_dir/send-cloudwatch.timer /etc/systemd/system/send-cloudwatch.timer
+sudo chmod 644 /etc/systemd/system/send-cloudwatch.timer
+
 sudo systemctl daemon-reload
 
 log "Starting relay server"
-sudo systemctl enable cardano-node
+sudo systemctl enable cardano-node send-cloudwatch.timer
 sudo systemctl reload-or-restart cardano-node
 
 log "Setup relay update"
