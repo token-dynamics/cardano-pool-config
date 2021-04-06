@@ -51,7 +51,7 @@ setTheme() {
 # Do NOT modify code below           #
 ######################################
 
-GLV_VERSION=v1.19.4
+GLV_VERSION=v1.19.5
 
 PARENT="$(dirname $0)"
 [[ -f "${PARENT}"/.env_branch ]] && BRANCH="$(cat ${PARENT}/.env_branch)" || BRANCH="master"
@@ -61,14 +61,14 @@ PARENT="$(dirname $0)"
 [[ -z "${NO_INTERNET_MODE}" ]] && NO_INTERNET_MODE="N"
 
 usage() {
-  cat <<EOF
-Usage: $(basename "$0") [-l] [-p] [-b <branch name>]
-Guild LiveView - An alternative cardano-node LiveView
+  cat <<-EOF
+		Usage: $(basename "$0") [-l] [-p] [-b <branch name>]
+		Guild LiveView - An alternative cardano-node LiveView
 
--l    Activate legacy mode - standard ASCII characters instead of box-drawing characters
--p    Disable default CNCLI ping and revert to ss/tcptraceroute if available, else use regular ICMP ping.
--b    Use alternate branch to check for updates - only for testing/development (Default: Master)  
-EOF
+		-l    Activate legacy mode - standard ASCII characters instead of box-drawing characters
+		-p    Disable default CNCLI ping and revert to ss/tcptraceroute if available, else use regular ICMP ping.
+		-b    Use alternate branch to check for updates - only for testing/development (Default: Master)
+		EOF
   exit 1
 }
 
@@ -78,7 +78,7 @@ while getopts :lpb: opt; do
     p ) DISABLE_CNCLI="true" ;;
     b ) BRANCH=${OPTARG}; echo "${BRANCH}" > "${PARENT}"/.env_branch ;;
     \? ) usage ;;
-    esac
+  esac
 done
 shift $((OPTIND -1))
 
@@ -142,19 +142,19 @@ if [[ "${NO_INTERNET_MODE}" == "N" ]]; then
   esac
 
   echo "Guild LiveView version check..."
-  if curl -s -f -m ${CURL_TIMEOUT} -o /tmp/gLiveView.sh "${URL}/gLiveView.sh" 2>/dev/null; then
-    GIT_VERSION=$(grep -r ^GLV_VERSION= /tmp/gLiveView.sh | cut -d'=' -f2)
+  if curl -s -f -m ${CURL_TIMEOUT} -o "${TMP_DIR}/gLiveView.sh" "${URL}/gLiveView.sh" 2>/dev/null; then
+    GIT_VERSION=$(grep -r ^GLV_VERSION= "${TMP_DIR}/gLiveView.sh" | cut -d'=' -f2)
     : "${GIT_VERSION:=v0.0.0}"
     if ! versionCheck "${GIT_VERSION}" "${GLV_VERSION}"; then
       echo -e "\nA new version of Guild LiveView is available"
       echo "Installed Version : ${GLV_VERSION}"
       echo "Available Version : ${GIT_VERSION}"
       if getAnswer "\nDo you want to upgrade to the latest version of Guild LiveView?"; then
-        TEMPL_CMD=$(awk '/^# Do NOT modify/,0' /tmp/gLiveView.sh)
+        TEMPL_CMD=$(awk '/^# Do NOT modify/,0' "${TMP_DIR}/gLiveView.sh")
         STATIC_CMD=$(awk '/#!/{x=1}/^# Do NOT modify/{exit} x' "${PARENT}/gLiveView.sh")
-        printf '%s\n%s\n' "$STATIC_CMD" "$TEMPL_CMD" > /tmp/gLiveView.sh
+        printf '%s\n%s\n' "$STATIC_CMD" "$TEMPL_CMD" > "${TMP_DIR}/gLiveView.sh"
         mv -f "${PARENT}/gLiveView.sh" "${PARENT}/gLiveView.sh_bkp$(printf '%(%s)T\n' -1)" && \
-        cp -f /tmp/gLiveView.sh "${PARENT}/gLiveView.sh" && \
+        cp -f "${TMP_DIR}/gLiveView.sh" "${PARENT}/gLiveView.sh" && \
         chmod 750 "${PARENT}/gLiveView.sh" && \
         myExit 0 "Update applied successfully!\n\nPlease start Guild LiveView again!" || \
         myExit 1 "${FG_RED}Update failed!${NC}\n\nPlease use prereqs.sh or manually download to update gLiveView"
@@ -328,17 +328,17 @@ checkPeers() {
     fi
   fi
   [[ -z ${peers} ]] && return
-  
+
   netstatSorted=$(printf '%s\n' "${peers[@]}" | sort)
   peerCNT=$(wc -w <<< "${peers}")
-  
+
   # Ping every node in the list
   lastpeerIP=""
   for peer in ${netstatSorted}; do
     peerIP=$(echo "${peer}" | cut -d: -f1)
     peerPORT=$(echo "${peer}" | cut -d: -f2)
     [[ -z ${peerIP} || -z ${peerPORT} ]] && continue
-    
+
     if [[ ${direction} = "out" ]]; then
       if [[ -n ${CNCLI} && -f ${CNCLI} && ${DISABLE_CNCLI} != "true" ]]; then
         checkPEER=$(${CNCLI} ping --host "${peerIP}" --port "${peerPORT}" --network-magic "${NWMAGIC}")
@@ -373,16 +373,16 @@ checkPeers() {
     lastpeerIP=${peerIP}
 
     # Update counters
-      if [[ ${peerRTT} -lt 50    ]]; then ((peerCNT1++))
+    if [[ ${peerRTT} -lt 50    ]]; then ((peerCNT1++))
     elif [[ ${peerRTT} -lt 100   ]]; then ((peerCNT2++))
     elif [[ ${peerRTT} -lt 200   ]]; then ((peerCNT3++))
     elif [[ ${peerRTT} -lt 99999 ]]; then ((peerCNT4++))
     else ((peerCNT0++)); fi
     rttResults+=("${peerRTT}:${peerIP}:${peerPORT} ")
   done
-  
+
   [[ ${#rttResults[@]} ]] && rttResultsSorted=$(printf '%s\n' "${rttResults[@]}" | sort -n)
-  
+
   peerCNTreachable=$((peerCNT-peerCNT0))
   if [[ ${peerCNTreachable} -gt 0 ]]; then
     peerRTTAVG=$((peerRTTSUM / peerCNTreachable))
@@ -459,18 +459,18 @@ while true; do
     tlines=$(tput lines) # update terminal lines
     tcols=$(tput cols)   # update terminal columns
   done
-  
+
   line=0; tput cup 0 0 # reset position
 
   # Gather some data
   getNodeMetrics
   [[ ${fail_count} -eq ${RETRIES} ]] && myExit 1 "${style_status_3}COULD NOT CONNECT TO A RUNNING INSTANCE, ${RETRIES} FAILED ATTEMPTS IN A ROW!${NC}"
-  if [[ ${uptimens} -le 0 ]]; then
+  if [[ ${uptimes} -le 0 ]]; then
     ((fail_count++))
     clear && tput cup 1 1
     printf "${style_status_3}Connection to node lost, retrying (${fail_count}/${RETRIES})!${NC}"
     waitForInput && continue
-  elif [[ ${fail_count} -ne 0 ]]; then # was failed but now ok, re-check 
+  elif [[ ${fail_count} -ne 0 ]]; then # was failed but now ok, re-check
     CNODE_PID=$(pgrep -fn "[c]ardano-node*.*--port ${CNODE_PORT}")
     version=$("$(command -v cardano-node)" version)
     node_version=$(grep "cardano-node" <<< "${version}" | cut -d ' ' -f2)
@@ -478,13 +478,13 @@ while true; do
     cncli_port=$(ss -tnp state established "( dport = :${CNODE_PORT} )" 2>/dev/null | grep cncli | awk '{print $3}' | cut -d: -f2)
     fail_count=0
   fi
-  
+
   if [[ -z "${PROT_PARAMS}" ]]; then
     getEraIdentifier
     PROT_PARAMS="$(${CCLI} query protocol-parameters ${ERA_IDENTIFIER} ${NETWORK_IDENTIFIER} 2>/dev/null)"
     if [[ -n "${PROT_PARAMS}" ]] && ! DECENTRALISATION=$(jq -re .decentralisationParam <<< ${PROT_PARAMS} 2>/dev/null); then DECENTRALISATION=0.5; fi
   fi
-  
+
   if [[ ${show_peers} = "false" ]]; then
     if [[ ${use_lsof} = 'Y' ]]; then
       peers_in=$(lsof -Pnl +M -i4 | grep ESTABLISHED | awk -v pid="${CNODE_PID}" -v port=":${CNODE_PORT}->" '$2 == pid && $9 ~ port {print $9}' | awk -F "->" '{print $2}' | wc -l)
@@ -518,7 +518,7 @@ while true; do
 
   ## main section ##
   printf "${tdivider}\n" && ((line++))
-  printf "${VL} Uptime: ${style_values_1}%s${NC}" "$(timeLeft $(( uptimens/1000 )))"
+  printf "${VL} Uptime: ${style_values_1}%s${NC}" "$(timeLeft ${uptimes})"
   tput cup ${line} $(( width - ${#title} - 3 - ${#CNODE_PORT} - 9 ))
   printf "${VL} Port: ${style_values_2}${CNODE_PORT} "
   tput cup ${line} $(( width - ${#title} - 3 ))
@@ -530,7 +530,7 @@ while true; do
   printf "${UHL}"
   printf "%0.s${HL}" $(seq $(( ${#title} + 2 )))
   printf "${LVL}\n" && ((line++))
-  
+
   if [[ ${check_peers} = "true" ]]; then
     tput ed
     printf "${VL} ${style_info}%-$((width-3))s${NC} ${VL}\n" "Output peer analysis started... please wait!"
@@ -545,7 +545,7 @@ while true; do
     tput cup ${line} 0
     tput ed
     printf "${VL} ${style_info}%-$((width-3))s${NC} ${VL}\n" "Output peer analysis done!" && ((line++))
-      
+
     echo "${m2divider}" && ((line++))
 
     printf "${VL} ${style_info}%-$((width-3))s${NC} ${VL}\n" "Input peer analysis started... please wait!" && ((line++))
@@ -581,7 +581,7 @@ while true; do
     printf "${VL} peer port is unknown. It's not uncommon to see many" && tput cup ${line} ${width} && printf "${VL}\n" && ((line++))
     printf "${VL} unreachable peers for incoming connections as it's a good" && tput cup ${line} ${width} && printf "${VL}\n" && ((line++))
     printf "${VL} security practice to disable ICMP in firewall." && tput cup ${line} ${width} && printf "${VL}\n" && ((line++))
-  elif [[ ${show_peers} = "true" ]]; then    
+  elif [[ ${show_peers} = "true" ]]; then
     printf "${VL}${STANDOUT} OUT ${NC}  RTT : Peers / Percent" && tput cup ${line} ${width} && printf "${VL}\n" && ((line++))
 
     printf "${VL}    0-50ms : ${style_values_1}%5s${NC} / ${style_values_1}%.f${NC}%% ${style_status_1}" "${peerCNT1_out}" "${peerPCT1_out}"
@@ -611,9 +611,9 @@ while true; do
       [[ $i -lt ${peerPCT4items_out} ]] && printf "${char_marked}" || printf "${NC}${char_unmarked}"
     done
     printf "${NC}${VL}\n" && ((line++))
-    
+
     echo "${m3divider}" && ((line++))
-    
+
     printf "${VL} Total / Unreachable : ${style_values_1}%s${NC} / " "${peerCNT_out}"
     [[ ${peerCNT0_out} -eq 0 ]] && printf "${style_values_1}0${NC}" || printf "${style_status_3}%s${NC}" "${peerCNT0_out}"
     tput cup ${line} $((second_col-1))
@@ -627,10 +627,10 @@ while true; do
 
     if [[ -n ${rttResultsSorted_out} ]]; then
       echo "${m3divider}" && ((line++))
-      
+
       printf "${VL}${style_info}   # : %20s   : RTT (ms)${NC}\n" "REMOTE PEER"
       header_line=$((line++))
-      
+
       peerNbr_out=0
       for peer in ${rttResultsSorted_out}; do
         ((peerNbr_out++))
@@ -646,7 +646,7 @@ while true; do
         ((line++))
         [[ ${peerNbr_out} -eq $((peerNbr_start_out+7)) ]] && break
       done
-      
+
       [[ ${peerNbr_start_out} -gt 1 ]] && nav_str="< " || nav_str=""
       nav_str+="[${peerNbr_start_out}-${peerNbr_out}]"
       [[ ${peerCNT_out} -gt ${peerNbr_out} ]] && nav_str+=" >"
@@ -654,9 +654,9 @@ while true; do
       [[ ${selected_direction} = "out" ]] && printf "${style_values_3} %s ${NC} ${VL}\n" "${nav_str}" || printf "  %s ${VL}\n" "${nav_str}"
       tput cup ${line} 0
     fi
-    
+
     echo "${mdivider}" && ((line++))
-    
+
     printf "${VL}${STANDOUT} In ${NC}   RTT : Peers / Percent"
     tput cup ${line} ${width}
     printf "${VL}\n" && ((line++))
@@ -688,9 +688,9 @@ while true; do
       [[ $i -lt ${peerPCT4items_in} ]] && printf "${char_marked}" || printf "${NC}${char_unmarked}"
     done
     printf "${NC}${VL}\n" && ((line++))
-    
+
     echo "${m3divider}" && ((line++))
-    
+
     printf "${VL} Total / Unreachable : ${style_values_1}%s${NC} / " "${peerCNT_in}"
     [[ ${peerCNT0_in} -eq 0 ]] && printf "${style_values_1}0${NC}" || printf "${style_status_3}%s${NC}" "${peerCNT0_in}"
     tput cup ${line} $((second_col-1))
@@ -701,13 +701,13 @@ while true; do
     else printf "Average RTT : ${style_status_3}---${NC} ms"; fi
     tput cup ${line} ${width}
     printf "${VL}\n" && ((line++))
-    
+
     if [[ -n ${rttResultsSorted_in} ]]; then
       echo "${m3divider}" && ((line++))
-      
+
       printf "${VL}${style_info}   # : %20s   : RTT (ms)${NC}\n" "REMOTE PEER"
       header_line=$((line++))
-      
+
       peerNbr_in=0
       for peer in ${rttResultsSorted_in}; do
         ((peerNbr_in++))
@@ -723,7 +723,7 @@ while true; do
         ((line++))
         [[ ${peerNbr_in} -eq $((peerNbr_start_in+7)) ]] && break
       done
-      
+
       [[ ${peerNbr_start_in} -gt 1 ]] && nav_str="< " || nav_str=""
       nav_str+="[${peerNbr_start_in}-${peerNbr_in}]"
       [[ ${peerCNT_in} -gt ${peerNbr_in} ]] && nav_str+=" >"
@@ -791,9 +791,9 @@ while true; do
       done
     fi
     printf "${VL} ${style_values_1}${epoch_bar}${NC} ${VL}\n"; ((line++))
-    
+
     printf "${VL}"; tput cup $((line++)) ${width}; printf "${VL}\n" # empty line
-    
+
     tip_ref=$(getSlotTipRef)
     tip_diff=$(( tip_ref - slotnum ))
     sec_col_value_size=$((width-second_col-13))
@@ -818,19 +818,19 @@ while true; do
       printf "Status     : ${style_info}%-${sec_col_value_size}s${NC}${VL}\n" "syncing ($(printf "%2.1f" "${sync_progress}")%)"
     fi
     ((line++))
-    
+
     echo "${m2divider}" && ((line++))
-    
+
     printf "${VL} Processed TX     : ${style_values_1}%s${NC}" "${tx_processed}"
     tput cup ${line} $((second_col))
     printf "%-$((width-second_col))s${NC}${VL}\n" "        Out / In" && ((line++))
     printf "${VL} Mempool TX/Bytes : ${style_values_1}%s${NC} / ${style_values_1}%s${NC}%$((second_col-24-${#mempool_tx}-${#mempool_bytes}))s" "${mempool_tx}" "${mempool_bytes}"
     printf "Peers : ${style_values_1}%3s${NC}   ${style_values_1}%-5s${NC}%$((width-second_col-19))s${VL}\n" "${peers_out}" "${peers_in}" && ((line++))
-    
+
     ## Core section ##
     if [[ ${nodemode} = "Core" ]]; then
       echo "${mdivider}" && ((line++))
-      
+
       printf "${VL} KES current/remaining"
       tput cup ${line} $((second_col-2))
       printf ": ${style_values_1}%s${NC} / " "${kesperiod}"
@@ -845,9 +845,9 @@ while true; do
       printf "${VL} KES expiration date"
       tput cup ${line} $((second_col-2))
       printf ": ${style_values_1}%-$((width-second_col))s${NC}${VL}\n" "${kes_expiration}" && ((line++))
-      
+
       echo "${m2divider}" && ((line++))
-      
+
       if [[ -f "${BLOCKLOG_DB}" ]]; then
         invalid_cnt=0; missed_cnt=0; ghosted_cnt=0; stolen_cnt=0; confirmed_cnt=0; adopted_cnt=0; leader_cnt=0
         for status_type in $(sqlite3 "${BLOCKLOG_DB}" "SELECT status, COUNT(status) FROM blocklog WHERE epoch=${epochnum} GROUP BY status;" 2>/dev/null); do
@@ -877,13 +877,13 @@ while true; do
         [[ ${leader_cnt} -eq 0 ]] && leader_fmt="${NC}" || leader_fmt="${style_values_1}"
 
         printf "${VL}${STANDOUT} BLOCKS ${NC}  Leader  | Ideal  | Luck    | Adopted | Confirmed%$((width-59))s${VL}\n" "" && ((line++))
-        printf "${VL}%10s${leader_fmt}%-10s%-9s%-10s${adopted_fmt}%-10s${confirmed_fmt}%-9s${NC}%$((width-59))s${VL}\n" "" "${leader_cnt}" "${epoch_stats[0]}" "${epoch_stats[1]}" "${adopted_cnt}" "${confirmed_cnt}" "" && ((line++))   
-        
+        printf "${VL}%10s${leader_fmt}%-10s%-9s%-10s${adopted_fmt}%-10s${confirmed_fmt}%-9s${NC}%$((width-59))s${VL}\n" "" "${leader_cnt}" "${epoch_stats[0]}" "${epoch_stats[1]}" "${adopted_cnt}" "${confirmed_cnt}" "" && ((line++))
+
         if [[ ${invalid_cnt} -ne 0 || ${missed_cnt} -ne 0 || ${ghosted_cnt} -ne 0 || ${stolen_cnt} -ne 0 ]]; then
           printf "${VL}%10sInvalid | Missed | Ghosted | Stolen%$((width-46))s${VL}\n" "" && ((line++))
           printf "${VL}%10s${invalid_fmt}%-10s${missed_fmt}%-9s${ghosted_fmt}%-10s${stolen_fmt}%-6s${NC}%$((width-46))s${VL}\n" "" "${invalid_cnt}" "${missed_cnt}" "${ghosted_cnt}" "${stolen_cnt}" "" && ((line++))
         fi
-        
+
         if [[ -n ${leader_next} ]]; then
           leader_time_left=$((  $(date -u -d ${leader_next} +%s) - $(printf '%(%s)T\n' -1) ))
           if [[ ${leader_time_left} -gt 0 ]]; then
@@ -908,9 +908,9 @@ while true; do
       fi
     fi
   fi
-  
+
   [[ ${check_peers} = "true" ]] && check_peers=false && show_peers=true && clear && continue
-  
+
   echo "${bdivider}" && ((line++))
   printf " TG Announcement/Support channel: ${style_info}t.me/guild_operators_official${NC}\n\n" && line=$((line+2))
   if [[ ${show_peers} = "true" && ${show_peers_info} = "true" ]]; then
