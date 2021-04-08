@@ -3,18 +3,8 @@
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
-docker pull quay.io/tokendynamics/docker-cardano-node
-docker run --rm -v $tmpdir:/mnt/data -i quay.io/tokendynamics/docker-cardano-node sh << CMD
-mkdir -p /mnt/data/usr/lib
-mkdir -p /mnt/data/usr/include
-mkdir -p /mnt/data/usr/local/bin
-cp -P -R /usr/lib/libsodium* /mnt/data/usr/lib/
-cp -P -R /usr/include/sodium* /mnt/data/usr/include/
-cp /root/.local/bin/* /mnt/data/usr/local/bin/
-CMD
-cp -P -R $tmpdir/usr/* /usr/
-rm -rf "$tmpdir"
-
-docker rmi quay.io/tokendynamics/docker-cardano-node
+curl https://dl.haskellworks.io/binaries/libsodium/23.3.0/libsodium.tar.gz | tar zxvf - -C /usr
+curl https://dl.haskellworks.io/binaries/cardano-node/1.26.1/cardano-node.tar.gz | tar zxvf - -C /usr/local/bin
+curl https://dl.haskellworks.io/binaries/cardano-cli/1.26.1/cardano-cli.tar.gz | tar zxvf - -C /usr/local/bin
 
 cardano-node version
