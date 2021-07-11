@@ -26,10 +26,15 @@ sudo apt-get -y install jq cron vim gcc build-essential
 log "Install ghcup"
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 sh
 
+log "Install cardano prerequisites"
+curl -sS -o /tmp/prereqs.sh https://raw.githubusercontent.com/cardano-community/guild-operators/master/scripts/cnode-helper-scripts/prereqs.sh
+chmod 755 /tmp/prereqs.sh
+
 log "Install cloudwatch agent"
 curl -sL https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb -o /tmp/amazon-cloudwatch-agent.deb
 sudo dpkg -i -E /tmp/amazon-cloudwatch-agent.deb
 rm /tmp/amazon-cloudwatch-agent.deb
+
 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
   -a fetch-config \
@@ -86,6 +91,9 @@ fi
 log "Configuring systemd"
 sudo cp $setup_dir/cardano-node.service /etc/systemd/system/cardano-node.service
 sudo chmod 644 /etc/systemd/system/cardano-node.service
+
+sudo cp $setup_dir/cncli-sync.service /etc/systemd/system/cncli-sync.service
+sudo chmod 644 /etc/systemd/system/cncli-sync.service
 
 sudo cp $setup_dir/send-cloudwatch.service /etc/systemd/system/send-cloudwatch.service
 sudo chmod 644 /etc/systemd/system/send-cloudwatch.service
