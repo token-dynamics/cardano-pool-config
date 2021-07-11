@@ -21,7 +21,7 @@ log() {
 
 log "Install more packages"
 sudo apt-get update
-sudo apt-get -y install jq cron vim
+sudo apt-get -y install jq cron vim gcc build-essential
 
 log "Install ghcup"
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 sh
@@ -40,8 +40,12 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 log "Setup scripts are in: $setup_dir"
 log "Config templates are in: $config_dir"
 
-grep "source $env_dir/$NODE_TYPE.sh" /home/ubuntu/.bashrc ||
+grep "source $env_dir/$NODE_TYPE.sh" /home/ubuntu/.bashrc || \
   echo "source $env_dir/$NODE_TYPE.sh" >> /home/ubuntu/.bashrc
+
+export PATH="$HOME/.ghcup/bin:$PATH"
+grep 'export PATH="$HOME/.ghcup/bin:$PATH"' /home/ubuntu/.bashrc || \
+  echo 'export PATH="$HOME/.ghcup/bin:$PATH"' >> /home/ubuntu/.bashrc
 
 log "Installing cardano-node"
 sudo sh $setup_dir/install-cardano-node.sh
