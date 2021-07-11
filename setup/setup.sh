@@ -21,7 +21,10 @@ log() {
 
 log "Install more packages"
 sudo apt-get update
-sudo apt-get -y install jq cron
+sudo apt-get -y install jq cron vim
+
+log "Install ghcup"
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 sh
 
 log "Install cloudwatch agent"
 curl -sL https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb -o /tmp/amazon-cloudwatch-agent.deb
