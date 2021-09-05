@@ -4,7 +4,14 @@ tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
 curl https://dl.haskellworks.io/binaries/libsodium/23.3.0/libsodium.tar.gz | tar zxvf - -C /usr
-curl https://dl.haskellworks.io/binaries/cardano-node/1.27.0/cardano-node-x86_64_linux.tar.gz | tar zxvf - -C /usr/local/bin
-curl https://dl.haskellworks.io/binaries/cardano-cli/1.27.0/cardano-cli-x86_64_linux.tar.gz | tar zxvf - -C /usr/local/bin
+
+mkdir /usr/local/cardano-node-1.29.0
+
+curl https://dl.haskellworks.io/binaries/cardano-node/cardano-node-1.29.0-linux.tar.gz | tar zxvf - -C /usr/local/cardano-node-1.29.0
+
+ln -sf /usr/local/cardano-node-1.29.0 /usr/local/cardano-node
+
+ln -sf /usr/local/cardano-node/cardano-node /usr/local/bin/cardano-node
+ln -sf /usr/local/cardano-node/cardano-cli  /usr/local/bin/cardano-cli
 
 cardano-node version
