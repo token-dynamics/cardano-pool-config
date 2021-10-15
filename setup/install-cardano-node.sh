@@ -9,6 +9,8 @@ mkdir -p /usr/local/cardano-node-1.30.1
 
 curl https://hydra.iohk.io/build/7739415/download/1/cardano-node-1.30.1-linux.tar.gz | tar zxvf - -C /usr/local/cardano-node-1.30.1
 
+rm -f /usr/local/cardano-node
+
 ln -sf /usr/local/cardano-node-1.30.1 /usr/local/cardano-node
 
 ln -sf /usr/local/cardano-node/cardano-node /usr/local/bin/cardano-node
