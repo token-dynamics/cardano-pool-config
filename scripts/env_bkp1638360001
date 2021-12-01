@@ -59,18 +59,6 @@ SOCKET="/opt/cardano-node/socket"                       # Override automatic det
 #POOL_REGCERT_FILENAME="pool.cert"
 #POOL_CURRENT_KES_START="kes.start"
 #POOL_DEREGCERT_FILENAME="pool.dereg"
-#CNODEBIN="${HOME}/.cabal/bin/cardano-node"             # Override automatic detection of cardano-node executable
-#UPDATE_CHECK="Y"                                       # Check for updates to scripts, it will still be prompted before proceeding (Y|N).
-#TMP_DIR="/tmp/cnode"                                   # Folder to hold temporary files in the various scripts, each script might create additional subfolders
-#TIMEOUT_LEDGER_STATE=300                               # Timeout in seconds for querying and dumping ledger-state
-#IP_VERSION=4                                           # The IP version to use for push and fetch, valid options: 4 | 6 | mix (Default: 4)
-#PGREST_API="http://127.0.0.1:8050"                     # Uncomment and set to enable PostgREST API queries against DB-Sync
-#DBSYNC_QUERY_FOLDER="${CNODE_HOME}/files/dbsync/queries" # [advanced feature] Folder containing DB-Sync chain analysis queries
-#ASSET_FOLDER="${CNODE_HOME}/priv/asset"                # Root folder for Multi-Assets containing minted assets and subfolders for Policy IDs
-#ASSET_POLICY_VK_FILENAME="policy.vkey"                 # Standardized names for all multi-asset related files
-#ASSET_POLICY_SK_FILENAME="policy.skey"
-#ASSET_POLICY_SCRIPT_FILENAME="policy.script"           # File extension '.script' mandatory
-#ASSET_POLICY_ID_FILENAME="policy.id"
 
 ######################################
 # Do NOT modify code below           #

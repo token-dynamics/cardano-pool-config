@@ -46,11 +46,6 @@ setTheme() {
     myExit 1 "Please specify a valid THEME name!"
   fi
 }
-PEER_LIST_CNT=6                           # Number of peers to show on each in/out page in peer analysis view
-#ENABLE_IP_GEOLOCATION="Y"                # Enable IP geolocation on outgoing and incoming connections using ip-api.com (default: Y)
-#LATENCY_TOOLS="cncli|ss|tcptraceroute|ping" # Preferred latency check tool order, valid entries: cncli|ss|tcptraceroute|ping (must be separated by |)
-#CNCLI_CONNECT_ONLY=false                 # By default cncli measure full connect handshake duration. If set to false, only connect is measured similar to other tools
-    style_values_4=${FG_LGRAY}               # color of informational text
 
 ######################################
 # Do NOT modify code below           #
